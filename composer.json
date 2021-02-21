@@ -18,7 +18,7 @@
         "ext-iconv": "*",
         "ext-curl": "*",
         "normphp/config": "dev-master",
-        "normphp/helper": "dev-master",
+        "normphp/helper": "dev-main",
         "normphp/container": "dev-main",
         "normphp-core/terminal-info": "dev-main"
     },
