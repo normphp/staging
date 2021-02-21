@@ -1,0 +1,15 @@
+{
+  "title":"框架核心",
+  "author": "pizepei",
+  "packageExplain": "框架核心",
+  "bind": {
+    "AppContainer":[
+      {
+        "name":"Helper",
+        "class":"HelperContainer",
+        "method":"Helper()",
+        "explain":"应用层次的Helper容器"
+      }
+    ]
+  }
+}

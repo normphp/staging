@@ -1,0 +1,33 @@
+{
+    "name": "normphp/staging",
+    "description": "staging",
+    "keywords": ["staging","miniature","distributed"],
+    "homepage": "https://normphp.org",
+    "authors": [
+        {
+            "name": "pizepei",
+            "email": "pizepei@pizepei.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1.0",
+        "ext-json": "*",
+        "ext-pcre": "*",
+        "ext-mbstring": "*",
+        "ext-iconv": "*",
+        "ext-curl": "*",
+        "normphp/config": "dev-master",
+        "normphp/helper": "dev-master",
+        "normphp/container": "dev-main",
+        "normphp-core/terminal-info": "dev-main"
+    },
+    "repositories": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "normphp\\staging\\": "src/"
+        }
+    }
+}
