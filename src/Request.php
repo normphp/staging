@@ -301,6 +301,7 @@ class Request
                         $this->restrainField($field,$dataValue,$info);
                     }
                 }
+            }elseif ($type ==='raw'){
             }
         }
     }
@@ -314,7 +315,7 @@ class Request
     {
         /** 循环处理限制 **/
         foreach ($info['restrain'] as $restrainVlue){
-            if (in_array($restrainVlue,$this->app->Route()::ReturnFormat)){
+            if (in_array($restrainVlue,$this->app->Route()::ReturnFormat) && $restrainVlue !=='raw'){
                 /**结点 层**/
                 $this->dataFiltrationRecursive($data[$field],$info['substratum'],$restrainVlue);
             }else{
