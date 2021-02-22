@@ -40,7 +40,7 @@ class Constraint extends \normphp\staging\Constraint
      * @param bool $exception 是否异常
      * @throws \Exception
      */
-    public static function moneyFormat(array $constraint,string $explain,string $field,string &$data,$restrain,bool $exception=true)
+    public static function moneyFormat(array $constraint,string $explain,string $field, &$data,$restrain,bool $exception=true)
     {
         /***由于不确定是先转换数据类型 函数判断数据格式，为保证数据一致性，先转换成定义的数据类型再进行数据格式判断 **/
         if ($constraint['dataType'] !== ''){settype($data,$constraint['dataType']);}
@@ -55,7 +55,7 @@ class Constraint extends \normphp\staging\Constraint
      * @param bool $exception 是否异常
      * @throws \Exception
      */
-    public static function required(array $constraint,string $explain,string $field,string &$data,$restrain,bool $exception=true)
+    public static function required(array $constraint,string $explain,string $field, &$data,$restrain,bool $exception=true)
     {
         /***由于不确定是先转换数据类型 函数判断数据格式，为保证数据一致性，先转换成定义的数据类型再进行数据格式判断 **/
         if ($constraint['dataType'] !== ''){settype($data,$constraint['dataType']);}
