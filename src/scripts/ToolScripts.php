@@ -31,8 +31,10 @@ class ToolScripts
      * @var Helper
      */
     public static $Helper = Helper::class;
+
     /**
      * 初始化
+     * @param Event $event
      */
     public static function init(Event $event)
     {
@@ -112,7 +114,6 @@ class ToolScripts
                 $value['tpl'] = $value['tpl']??$key;
                 $data['Title'] = $value['title'];
                 if ($key==='normphp.bat'){
-                    //normphp-helper\php\8.0\x86\php
                     $data['phpPath'] = dirname(getcwd(),1).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'8.0'.DIRECTORY_SEPARATOR.'x86'.DIRECTORY_SEPARATOR.'php';
                 }
                 $data = array_merge($dataTpl,$data);
@@ -124,12 +125,21 @@ class ToolScripts
             }
         }
     }
+
+    /**
+     * 需要处理的容器模板
+     */
     const Container =[
         'AppContainer'      =>      ['CONTAINER_NAME'=>'App','extends'=>'\normphp\staging\App','explain'=>'@methodstatic static 类   方法   [可选不填写就可非static方法] File[返回数据类型 可以是类 或者其他的比如self当前来]  test(string $question) [函数详情]'],
         'HelperContainer'   =>      ['CONTAINER_NAME'=>'Helper','extends'=>'','explain'=>'helper扩展类：该类不会实例化主要是为了方便绑定容器和适配ide，适配ide必须添加对应的@method 或者 @property'],
         'AuthorityContainer'   =>      ['CONTAINER_NAME'=>'Authority','extends'=>'','explain'=>'权限资源验证容器集合'],
     ];
 
+    /**
+     * 创建Container适配器
+     * @param Event $event
+     * @throws \Exception
+     */
     public static function createContainer(Event $event)
     {
         $time = date('Y-m-d H:i:s');
