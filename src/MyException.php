@@ -288,7 +288,7 @@ class MyException
         if(!$this->app->has('Route')){
             $route = [
                 'controller'=>'system',
-                'router'=>$_SERVER['PATH_INFO'],
+                'router'=>$_SERVER['PATH_INFO']??'',
             ];
         }
         return [
