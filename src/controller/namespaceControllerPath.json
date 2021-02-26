@@ -5,10 +5,6 @@
     "staging": {
       "name":"应用项目",
       "explain": ""
-    },
-    "document":{
-      "name":"项目文档",
-      "explain": ""
     }
   },
   "constraint": {
