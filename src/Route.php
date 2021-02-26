@@ -208,10 +208,10 @@ class Route
         # 判断路由没事 获取当前路由 atRoute 通常是通过配置nginx 通过$_SERVER['PATH_INFO']获取的请求路径（不包括域部分）
         if (array_key_exists('PATH_INFO',$_SERVER)){
             //默认路由
-            $atRoute = $_SERVER['PATH_INFO'] !== ''?$_SERVER['PATH_INFO']:('/'.$this->app->__ROUTE__['index']);
+            $atRoute = $_SERVER['PATH_INFO'] !== ''?$_SERVER['PATH_INFO']:$this->app->__ROUTE__['index'];
         }else if (isset($_SERVER['PHP_SELF'])){
             # 在使用 php -S 127.0.0.1:8080 index.php 启动服务时才会进入到这里（至少目前是这样：2021-02-25）
-            $atRoute = $_SERVER['PHP_SELF']==='/index.php'?('/'.$this->app->__ROUTE__['index']):$_SERVER['PHP_SELF'];
+            $atRoute = $_SERVER['PHP_SELF']==='/index.php'?$this->app->__ROUTE__['index']:$_SERVER['PHP_SELF'];
             $_SERVER['PATH_INFO'] = $_SERVER['PHP_SELF'];
         }else{
             throw new \Exception('服务配置错误，请检查NGINX配置PATH_INFO');
