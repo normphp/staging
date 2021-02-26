@@ -37,6 +37,10 @@ class App extends Container
      */
     const CONTAINER_NAME = 'App';
     /**
+     * 框架主版本
+     */
+    const  VERSIONS = '1.01';
+    /**
      * 是否开启开发调试模式
      * @var bool
      */
