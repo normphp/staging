@@ -112,7 +112,7 @@
 <script>
 
     layui.config({
-        base: '/{{MODULE_PREFIX}}/document/layui/extends/',
+        base: '{{MODULE_PREFIX}}/document/layui/extends/',
     }).extend({
         authtree: 'authtree',
     });
@@ -130,7 +130,7 @@
             // console.log(elem.context.innerText); //得到当前点击的DOM对象
 
             $.ajax({//异步请求返回给后台
-                url:'/{{MODULE_PREFIX}}/document/index-nav.json',
+                url:'{{MODULE_PREFIX}}/document/index-nav.json',
                 type:'GET',
                 data:{father:elem.context.rel,index:elem.context.name},
                 dataType:'json',
@@ -154,7 +154,7 @@
         });
         element.render('nav')
         $.ajax({//异步请求返回给后台
-            url:'/{{MODULE_PREFIX}}/document/nav-list.json',
+            url:'{{MODULE_PREFIX}}/document/nav-list.json',
             type:'GET',
             data:{},
             dataType:'json',
@@ -213,7 +213,7 @@
                 //这里获取到数据执行显示
                 table.render({
                     elem: '#'+item.id+index
-                    ,url:'/{{MODULE_PREFIX}}/document/'+item.url
+                    ,url:'{{MODULE_PREFIX}}/document/'+item.url
                     ,where:{father:elem.context.rel,index:elem.context.name,type:index}
                     ,response: response
                     // ,toolbar: '#toolbarDemo-get'
@@ -303,7 +303,7 @@
             {{# }else  if(item.title.length === 0){ }}
                 {{index}}
             {{#  }else{ }}
-                {{item.title}}
+                {{item.title ||''}}
              {{#  }}}
             </a></dd>
             {{#  }); }}
@@ -320,7 +320,7 @@
         <div class="layui-card">
             <div class="layui-card-header">控制器信息</div>
             <div class="layui-card-body">
-                <b>介绍：</b>类名：{{d.fatherInfo.title}}&nbsp;&nbsp;|&nbsp;&nbsp;创建者：{{d.fatherInfo.User}}<br>
+                <b>介绍：</b>类名：{{d.fatherInfo.title ||''}}&nbsp;&nbsp;|&nbsp;&nbsp;创建者：{{d.fatherInfo.User}}<br>
                 <b>命名空间：</b>{{d.fatherInfo.index}}<br>
                 <b>根路由：</b>{{d.fatherInfo.basePath}}<br>
                 <b>权限组列表：</b>{{d.fatherInfo.authGroup}}<br>
@@ -338,7 +338,7 @@
                 {{#  if(d.info === null){ }}
 
                 {{#  }else{ }}
-                <b>标题：</b>{{d.info.title}} &nbsp;&nbsp;|&nbsp;&nbsp;Author：{{d.info.Author}}&nbsp;&nbsp;&nbsp;Created：{{d.info.Created}}<br>
+                <b>标题：</b>{{d.info.title || ''}} &nbsp;&nbsp;|&nbsp;&nbsp;Author：{{d.info.Author}}&nbsp;&nbsp;&nbsp;Created：{{d.info.Created}}<br>
                 <b>解释：</b>{{d.info.explain}}<br>
                 <b>路由：</b><span class="layui-badge">{{d.info.routerType}}</span>&nbsp;&nbsp;</nbsp><span class="layui-badge">{{d.info.requestType}}</span>&nbsp;&nbsp;{{d.info.routerStr}}&nbsp;&nbsp; <span class="layui-bg-green">{{d.info.ReturnType}}</span><br>
                 <b>正则内容：</b>{{d.info.matchStr}}<br>

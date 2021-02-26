@@ -44,7 +44,7 @@ class BasicsDocument extends Controller
             'local.layui.css'=>\Deploy::VIEW_RESOURCE_PREFIX.'/start/layui/css/layui.css',
             'local.layui.js'=>\Deploy::VIEW_RESOURCE_PREFIX.'/start/layui/layui.js',
             'VIEW_RESOURCE_PREFIX'=>\Deploy::VIEW_RESOURCE_PREFIX,
-            'MODULE_PREFIX'=>\Deploy::MODULE_PREFIX,
+            'MODULE_PREFIX'=>\Deploy::MODULE_PREFIX===''?'':'/'.\Deploy::MODULE_PREFIX,
             'jsonDataName'=>$this->app->__INIT__['ReturnJsonData'],
         ];
         $path = dirname(__DIR__).DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'Document'.DIRECTORY_SEPARATOR;
@@ -90,12 +90,14 @@ class BasicsDocument extends Controller
      * @return array [json]
      *      data [object] 控制器数据
      *          fatherInfo [object] 控制器数据
+     *              baseAuthGroup [raw] 基础权限
+     *              route [raw] 路由详细
      *              index [string] 命名空间
      *              title [string] 控制器标题
      *              class [string] 控制器名
      *              User [string] 创建者
      *              basePath [string] 控制器根路由
-     *              authGroup [string] 控制器权限分组
+     *              authGroup [raw] 控制器权限分组
      *              baseAuth [string] 控制器根权限
      *          info [raw] 详细数据
      * @title  控制器文档信息
@@ -114,7 +116,8 @@ class BasicsDocument extends Controller
         }
         return $this->succeed([
                 'fatherInfo'=>$fatherInfo,
-                'info'=>$info]
+                'info'=>$info
+            ]
         );
 
     }
@@ -163,59 +166,12 @@ class BasicsDocument extends Controller
      *
      * @param \normphp\staging\Request $Request
      *      get [object] get参数
-     *          father [string] 父路径
-     *          index [string required] 当前路径
-     *          type [string required] 参数类型
-     *          objectList [objectList]
-     *              a [enum:1,2.3,3]
-     *              object1 [objectList]
-     *                  c [enum:1,2.3,3 int]
-     * @return array [json]
-     *      data [objectList] 数据e
-     *              field [string required int] 参数名字
-     *              type [string] 参数数据类型
-     *              explain [string] 参数说明
-     *              restrain [string] 参数约束
-     *              objectList [objectList]
-     *                  a [enum:1,2.3,3]
-     *                  object1 [objectList]
-     *                      c [enum:1,2.3,3 int]
-     * @title  获取API的请求参数信息
-     * @explain  根据点击侧边导航获取对应的获取API文档信息
-     * @router get request-param2
-     * @throws \Exception
-     */
-    public function RequestParam2(Request $Request)
-    {
-        $input = $Request->input();
-        $this->succeed([[
-            'field'=>'12',
-            'type'=>'',
-            'explain'=>'',
-            'restrain'=>'',
-            'objectList'=>[
-                ['a'=>'1','object1'=>[['c'=>1]]]
-            ]],
-        ]);
-    }
-    /**
-     * @Author pizepei
-     * @Created 2019/2/14 23:01
-     *
-     * @param \normphp\staging\Request $Request
-     *      get [object] get参数
      *          father [string required] 父路径
      *          index [string required] 当前路径
      *          type [string required] 参数类型
-     *          objectList [objectList] 参数lsit
-     *              a [uuid] 参数
-     *              b [mobile] 手机号
-     *          object [object]
-     *              a [uuid] cssss
-     *              b [mobile] 手机号
      * @return array [json]
      *      data [objectList] 数据
-     *          field [int required] 参数名字
+     *          field [string] 参数名字
      *          type [string] 参数数据类型
      *          explain [string] 参数说明
      *          restrain [string] 参数约束
@@ -381,10 +337,10 @@ class BasicsDocument extends Controller
      * 文档中心菜单
      */
     const _NAV_ = <<<ABC
-<li class="layui-nav-item"><a href="/{{MODULE_PREFIX}}/document/index/document.html">API文档</a></li>
-<li class="layui-nav-item"><a href="/{{MODULE_PREFIX}}/document/index/authority.html">权限文档</a></li>
-<li class="layui-nav-item"><a href="/{{MODULE_PREFIX}}/document/index/code.html">状态码文档</a></li>
-<li class="layui-nav-item"><a href="/{{MODULE_PREFIX}}/document/index/code.html">状态码文档</a></li>
+<li class="layui-nav-item"><a href="{{MODULE_PREFIX}}/document/index/document.html">API文档</a></li>
+<li class="layui-nav-item"><a href="{{MODULE_PREFIX}}/document/index/authority.html">权限文档</a></li>
+<li class="layui-nav-item"><a href="{{MODULE_PREFIX}}/document/index/code.html">状态码文档</a></li>
+<li class="layui-nav-item"><a href="{{MODULE_PREFIX}}/document/index/code.html">状态码文档</a></li>
 <li class="layui-nav-item">
     <a href="javascript:;">资源文档</a>
     <dl class="layui-nav-child">
