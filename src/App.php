@@ -164,7 +164,11 @@ class App extends Container
      * @var array
      */
     private $ARGV = [];
-
+    /**
+     * 错误日志的保存方式
+     * @var string
+     */
+    private $__ERROR_LOG_SAVE__ = 'file';
     /**
      * App constructor.
      * @param bool $exploit             是否开发模式
@@ -472,6 +476,7 @@ class App extends Container
         $this->__UUID_IDENTIFIER__ = \Config::__UUID_IDENTIFIER__;//空间唯一参数
         $this->__INIT__ = \Config::UNIVERSAL['init'];//初始化配置
         $this->__ROUTE__ = \Config::UNIVERSAL['route'];//路由配置
+        $this->__ERROR_LOG_SAVE__ = \Config::ERROR_LOG_SAVE;//路由配置
         $this->__DS__ = DIRECTORY_SEPARATOR;//系统路径符
         $this->__TEMPLATE__ = $this->DOCUMENT_ROOT.$this->__APP__.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR;//模板路径
 

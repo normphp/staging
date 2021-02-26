@@ -427,15 +427,16 @@ class MyException
      */
     private function createLog($result,string $Logger='')
     {
-        file_put_contents(date('H_i_s').'error.txt',json_encode([$result]));
-        // 创建日志频道
-        #  "monolog/monolog": "^1.23"
-//        $log = new Logger('name');
-//        $log->pushHandler(new StreamHandler($this->path.'/your.log', Logger::WARNING));
-        // 添加日志记录
-        //$log->addWarning('Foo',$this->exploitData());
-        //$log->addError('Bar',$result);
-
+        $data = $this->app->Helper()->json_encode(['createDate'=>date('Y-m-d H:i:s'),'REQUEST_TIME_FLOAT'=>[$_SERVER['REQUEST_TIME_FLOAT']],'DATA'=>$result]).PHP_EOL;
+        /**判断是否有db类**/
+        if (class_exists('Db') && $this->app->__ERROR_LOG_SAVE__==='db'){
+            /** 使用 数据库保存 **/
+        }else{
+            /** 使用文件保存 **/
+            $dir = $this->app->DOCUMENT_ROOT.'runtime'.DIRECTORY_SEPARATOR.'errorlog'.DIRECTORY_SEPARATOR;
+            $this->app->Helper()->file()->createDir($dir);
+            file_put_contents($dir.date('y_m_d_H_i').'_error.txt',$data,FILE_APPEND | LOCK_EX);
+        }
     }
 
 }
