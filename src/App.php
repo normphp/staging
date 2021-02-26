@@ -508,7 +508,7 @@ class App extends Container
         $this->Route($this);    #路由类
         $this->Safety($this);
         /**判断AuthorityContainer定义容器是否存在，存在进行实例化**/
-        if (class_exists('\\container\\'.$this->__APP__.'\AuthorityContainer',false)){$this->Authority('\\container\\'.$this->__APP__.'\AuthorityContainer');}
+        if (class_exists('\\container\\'.$this->__APP__.'\\AuthorityContainer')){$this->Authority('\\container\\'.$this->__APP__.'\\AuthorityContainer');}
         $this->Request($this);  #请求类
         $this->__REQUEST_ID__ = $this->Request()->RequestId;    #获取请求类初始化设置的请求id
         # 全局响应配置 ：设置 Header
