@@ -378,7 +378,7 @@ class Response
             $data['route'] = $this->app->Route()->atRoute;#解释路由
         }
         if (in_array('sql',$this->app->__INIT__['SYSTEMSTATUS'])){
-            $data['sql'] = isset(Db::$DBTABASE['sqlLog'])?Db::$DBTABASE['sqlLog']:'';#历史slq
+            if (class_exists('Db')){$data['sql'] = isset(Db::$DBTABASE['sqlLog'])?Db::$DBTABASE['sqlLog']:'';} #历史slq
         }
         if (in_array('clientInfo',$this->app->__INIT__['SYSTEMSTATUS'])){ # clientInfo 客户端信息
             if ($this->app->__INIT__['clientInfo'] && $this->app->__PATTERN__ !== 'CLI'){
