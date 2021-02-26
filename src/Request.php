@@ -335,6 +335,7 @@ class Request
         $restrainKey = is_array($dataType)?$dataType[0]:$dataType;
         /**常规数据类型 'int','string','bool','float','array','null']**/
         if (in_array($restrainKey,$this->app->Route()::RequestParamDataType)){
+            if (is_array($data)){$data = json_encode($data);}
             settype($data,$restrainKey);
         }else if(isset(\BaseConstraint::DATA[$restrainKey])){
             /***自定义 数据格式类型 处理**/
