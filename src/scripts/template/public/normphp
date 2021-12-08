@@ -6,7 +6,7 @@
 # @Last Modified by: {{ModifiedBy}}
 # @Last Modified time: {{ModifiedTime}}
 #
-phpPath="$( dirname $(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd) ))/php/8.0/x86/php.exe"
+phpPath="$( dirname $(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd) ))/php/base/php.exe"
 normphpPath="$( dirname $(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd) ))/helper/public/index_cli.php"
 echo $phpPath;
 "$phpPath" ${normphpPath}  "--route" /normphp-helper-tool/cli  $@

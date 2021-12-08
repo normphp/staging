@@ -114,7 +114,7 @@ class ToolScripts
                 $value['tpl'] = $value['tpl']??$key;
                 $data['Title'] = $value['title'];
                 if ($key==='normphp.bat'){
-                    $data['phpPath'] = dirname(getcwd(),1).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'8.0'.DIRECTORY_SEPARATOR.'x86'.DIRECTORY_SEPARATOR.'php';
+                    $data['phpPath'] = dirname(getcwd(),1).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'base'.DIRECTORY_SEPARATOR.'php';
                 }
                 $data = array_merge($dataTpl,$data);
                 $tpl = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.$value['tpl']);
