@@ -10,7 +10,7 @@ use normphpCore\microServices\model\MicroserviceAppsReqLogModel;
 use normphpCore\encryption\aes\Prpcrypt;
 use normphp\model\redis\Redis;
 use normphp\model\cache\Cache;
-use normphp\staging\BasicsAuthority;
+use normphp\staging\authority\BasicsAuthority;
 
 class MicroServiceAuthority extends BasicsAuthority
 {

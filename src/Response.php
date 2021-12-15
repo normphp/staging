@@ -144,7 +144,7 @@ class Response
      * @throws \Exception
      * @title  控制器成功返回
      */
-    public function succeed($data,$msg='',$code='',$count=0)
+    public function succeed($data,$msg='', $code='', $count=0)
     {
         # 判断是否是微服务资源路由，是就写入日志
         if ($this->app->Route()->resourceType === 'microservice') $this->app->Authority->setMsAppsResponseLog($data);

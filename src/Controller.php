@@ -33,7 +33,7 @@ class Controller
     protected $app = null;
     /**
      * 权限路由的实例
-     * @var Authority|null
+     * @var \normphp\staging\authority\Authority |null
      */
     protected $Authority = null;
     /**
@@ -90,7 +90,7 @@ class Controller
      * @param string $key
      * @return mixed
      */
-    public function getAuthExtend($key ='')
+    public function getAuthExtend(string $key ='')
     {
         return $this->jurisdictionExtend[$key]??null;
     }
@@ -103,7 +103,7 @@ class Controller
      */
     public static function getBasicsPath():string
     {
-        return isset(static::$__FILE__)?static::$__FILE__:'';
+        return static::$__FILE__ ?? '';
     }
     /**
      * @Author 皮泽培
@@ -118,7 +118,7 @@ class Controller
      * @explain 视图加载
      * @throws \Exception
      */
-    public function view(string $name = '',array$data = [],string $path='',string $type='html',bool $safe=true):string
+    public function view(string $name = '', array$data = [], string $path='', string $type='html', bool $safe=true):string
     {
         $path = $path==''?
             $this->app->__TEMPLATE__.str_replace('\\',DIRECTORY_SEPARATOR,ltrim($this->app->Route()->controller, $this->app->__APP__.'\\')).DIRECTORY_SEPARATOR:
@@ -129,10 +129,10 @@ class Controller
         $file = file_get_contents($path.$name.'.'.$type);
         if(!empty($data))
         {
-            foreach($data as $key=>$vuleu)
-                if(!is_array($vuleu)){
-                    $file = str_replace("'{{{$key}}}'",$vuleu,$file);
-                    $file = str_replace("{{{$key}}}",$vuleu,$file);
+            foreach($data as $key=>$value)
+                if(!is_array($value)){
+                    $file = str_replace("'{{{$key}}}'",$value,$file);
+                    $file = str_replace("{{{$key}}}",$value,$file);
                 }
         }
         return $file;
@@ -149,9 +149,9 @@ class Controller
      * @return array
      * @title  控制器成功返回
      */
-    public function succeed($data,$msg='',$code='',$count=0)
+    public function succeed($data, string $msg='',$code='',$count=0)
     {
-        return $this->app->Response()->succeed($data,$msg,$code,$count);
+        $this->app->Response()->succeed($data,$msg,$code,$count);
     }
     /**
      * @Author pizepei

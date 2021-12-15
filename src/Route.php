@@ -96,19 +96,19 @@ class Route
     /**
      * 禁止外部获取的类属性
      */
-    const forbidPram = [
+    const FORBID_PRAM= [
         'noteRouter',//所有的路由信息
     ];
     /**
      * 应用目录下所有文件路径
      * @var array
      */
-    protected $filePathData = [];
+    protected array $filePathData = [];
     /**
      * 当前请求的控制器
      * @var string
      */
-    protected $controller = '';
+    protected string $controller = '';
     /**
      * 当前请求的模块
      * @var string
@@ -186,9 +186,9 @@ class Route
      * 一个请求处理完
      */
     /**
-     * @var App|null
+     * @var App
      */
-    protected $app = null;
+    protected App $app;
     /**
      * 当前工程项目的的基础权限集合分组
      * @var array
@@ -244,7 +244,7 @@ class Route
      * @title  快速获取对应请求类型的 路由信息集合
      * @explain 只有接收到对应的请求类型才会在框架路由类对象初始化时加载其他来请求类型的类文件不会加载
      */
-    protected function getRouteTypeData($type,&$RouteData)
+    protected function getRouteTypeData($type, &$RouteData)
     {
         # 回去对应请求类型的
         self::getRouteTypeData[$type];
@@ -262,7 +262,7 @@ class Route
      */
     protected function noteRoute()
     {
-        switch ($_SERVER['REQUEST_METHOD']){
+        switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
                 $this->getRouteTypeData('GET',$RouteData);
                 break;
@@ -317,6 +317,7 @@ class Route
             default:
                 $RouteData = [];
         }
+
         if (isset($RouteData['Router']) && is_string($RouteData['Router'])){
             # 匹配到常规路由
         }else{

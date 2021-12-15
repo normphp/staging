@@ -16,19 +16,20 @@ use normphp\staging\service\LocalBuildService;
 use normphp\helper\Helper;
 use normphpCore\terminalInfo\TerminalInfo;
 use normphp\staging\authority\Authority;
+use normphp\staging\authority\BasicsAuthority;
 /**
  * Class App
  * @package normphp\staging
  * @property BasicsAuthority        $Authority  权限基础类属性
- * @method  Authority               Authority(string $pattern,App $app  = App) 权限基础类
- * @method  Request                 Request(App $app  = App) 请求类
- * @method  Controller              Controller(App $app  = App) 控制器类
- * @method  MyException             MyException(App $app,string $path,$exception=null,array$info=[]) 权限基础类
- * @method  Route                   Route(App $app = App) 路由类
- * @method  InitializeConfig        InitializeConfig(App $app) 初始化配置类
- * @method  Helper                  Helper(string $son = '') 助手类
- * @method  Response                Response(App $app = App) 框架响应类
- * @method  Safety                  Safety(App $app = App) 安全过滤类
+ * @method  Authority               Authority() 权限基础类
+ * @method  Request                 Request() 请求类
+ * @method  Controller              Controller() 控制器类
+ * @method  MyException             MyException() 权限基础类
+ * @method  Route                   Route() 路由类
+ * @method  InitializeConfig        InitializeConfig() 初始化配置类
+ * @method  Helper                  Helper() 助手类
+ * @method  Response                Response() 框架响应类
+ * @method  Safety                  Safety() 安全过滤类
  */
 class App extends Container
 {
