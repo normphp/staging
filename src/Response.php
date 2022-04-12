@@ -79,7 +79,7 @@ class Response
     {
         $this->app = $app;
         # 合并 $HeaderType
-        $this->HeaderType = array_merge($this->HeaderType,$this->app->__INIT__['HeaderType']??[]);
+        $this->HeaderType = array_merge($this->HeaderType,$this->app->__INIT__['headerType']??[]);
     }
 
     public function __get($name)
@@ -149,14 +149,14 @@ class Response
         # 判断是否是微服务资源路由，是就写入日志
         if ($this->app->Route()->resourceType === 'microservice') $this->app->Authority->setMsAppsResponseLog($data);
         $result =  [
-            $this->app->__INIT__['SuccessReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['SuccessReturnJsonMsg']['value']:$msg,
-            $this->app->__INIT__['SuccessReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['SuccessReturnJsonCode']['value']:$code,
+            $this->app->__INIT__['successReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['successReturnJsonMsg']['value']:$msg,
+            $this->app->__INIT__['successReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['successReturnJsonCode']['value']:$code,
             $this->app->__INIT__['returnJsonData']=>$data,
         ];
         if($count>0){
-            $result[$this->app->__INIT__['ReturnJsonCount']] = $count;
+            $result[$this->app->__INIT__['returnJsonCount']] = $count;
         }else{
-            $result[$this->app->__INIT__['ReturnJsonCount']] = is_array($data)?count($data):0;
+            $result[$this->app->__INIT__['returnJsonCount']] = is_array($data)?count($data):0;
         }
         # statusCode 成功 200  错误失败  100   主要用来统一请求需要状态 是框架固定的 代表是succeed 还是 error或者异常
         $result['statusCode'] = 200;
@@ -180,8 +180,8 @@ class Response
             $this->app->Authority->setMsAppsResponseLog($data);
         }
         $result =  [
-            $this->app->__INIT__['ErrorReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['ErrorReturnJsonMsg']['value']:$msg,
-            $this->app->__INIT__['ErrorReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['ErrorReturnJsonCode']['value']:$code,
+            $this->app->__INIT__['errorReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['errorReturnJsonMsg']['value']:$msg,
+            $this->app->__INIT__['errorReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['errorReturnJsonCode']['value']:$code,
             $this->app->__INIT__['returnJsonData']=>$data,
         ];
         # statusCode 成功 200  错误失败  100   主要用来统一请求需要状态 是框架固定的 代表是succeed 还是 error 或者异常
@@ -257,7 +257,7 @@ class Response
             # 判断是否是array
             if (is_array($data)){
                 # 是array
-                if(isset($data[$this->app->__INIT__['returnJsonData']]) && isset($data[$this->app->__INIT__['SuccessReturnJsonCode']['name']]) && isset($this->app->__INIT__['SuccessReturnJsonMsg']['name']))
+                if(isset($data[$this->app->__INIT__['returnJsonData']]) && isset($data[$this->app->__INIT__['successReturnJsonCode']['name']]) && isset($this->app->__INIT__['SuccessReturnJsonMsg']['name']))
                 {
 
                     # 正常使用方法返回的格式化数据  在过滤后 强制把数据写入returnJsonData中
