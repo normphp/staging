@@ -926,11 +926,11 @@ class Route
             # 处理符合数据：中处理返回的第一层数据 同时不支持objectList raw 格式
             if (!empty($field)){
                 # 如果返回的是data 就使用data下层
-                if (isset($field[$this->app->__INIT__['ReturnJsonData']])){
+                if (isset($field[$this->app->__INIT__['returnJsonData']])){
                     # 如果是raw 或者 objectList 就设置我[]
-                    if (in_array($field[$this->app->__INIT__['ReturnJsonData']]['restrain'],['objectList','raw'])){
+                    if (in_array($field[$this->app->__INIT__['returnJsonData']]['restrain'],['objectList','raw'])){
                         $field = [];
-                    }else{$field = $field[$this->app->__INIT__['ReturnJsonData']];}
+                    }else{$field = $field[$this->app->__INIT__['returnJsonData']];}
                 }
                 # 判断返回数据是否正常
                 if (in_array($field['restrain'],['objectList','raw'])){

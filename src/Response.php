@@ -151,7 +151,7 @@ class Response
         $result =  [
             $this->app->__INIT__['SuccessReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['SuccessReturnJsonMsg']['value']:$msg,
             $this->app->__INIT__['SuccessReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['SuccessReturnJsonCode']['value']:$code,
-            $this->app->__INIT__['ReturnJsonData']=>$data,
+            $this->app->__INIT__['returnJsonData']=>$data,
         ];
         if($count>0){
             $result[$this->app->__INIT__['ReturnJsonCount']] = $count;
@@ -182,7 +182,7 @@ class Response
         $result =  [
             $this->app->__INIT__['ErrorReturnJsonMsg']['name']=>$msg==''?$this->app->__INIT__['ErrorReturnJsonMsg']['value']:$msg,
             $this->app->__INIT__['ErrorReturnJsonCode']['name']=>$code==''?$this->app->__INIT__['ErrorReturnJsonCode']['value']:$code,
-            $this->app->__INIT__['ReturnJsonData']=>$data,
+            $this->app->__INIT__['returnJsonData']=>$data,
         ];
         # statusCode 成功 200  错误失败  100   主要用来统一请求需要状态 是框架固定的 代表是succeed 还是 error 或者异常
         $result['statusCode'] = 100;
@@ -257,12 +257,12 @@ class Response
             # 判断是否是array
             if (is_array($data)){
                 # 是array
-                if(isset($data[$this->app->__INIT__['ReturnJsonData']]) && isset($data[$this->app->__INIT__['SuccessReturnJsonCode']['name']]) && isset($this->app->__INIT__['SuccessReturnJsonMsg']['name']))
+                if(isset($data[$this->app->__INIT__['returnJsonData']]) && isset($data[$this->app->__INIT__['SuccessReturnJsonCode']['name']]) && isset($this->app->__INIT__['SuccessReturnJsonMsg']['name']))
                 {
 
-                    # 正常使用方法返回的格式化数据  在过滤后 强制把数据写入ReturnJsonData中
+                    # 正常使用方法返回的格式化数据  在过滤后 强制把数据写入returnJsonData中
                     # 如果不是error 100 方法的异常   就进行数据过滤
-                    if ($data['statusCode'] !== 100){  $this->app->Request()->returnParamFiltration($data[$this->app->__INIT__['ReturnJsonData']]); }
+                    if ($data['statusCode'] !== 100){  $this->app->Request()->returnParamFiltration($data[$this->app->__INIT__['returnJsonData']]); }
                 }else{
                     # 控制器直接return的数据
                     # 如果不是error 100 方法的异常   就进行数据过滤
@@ -272,7 +272,7 @@ class Response
             }else{
                 # 不是array 是控制器return的是字符串 （使用异常或者succeed方法等的$data都是array   但是进入此方法的都是控制器路由定义为返回json的资源)
                 $data = [
-                    $this->app->__INIT__['ReturnJsonData'] =>$data,
+                    $this->app->__INIT__['returnJsonData'] =>$data,
                 ];
             }
         }
@@ -280,6 +280,8 @@ class Response
         if (($this->app->__EXPLOIT__ || $debug ==='true' ) && $debug !=='false' ){
             $data['SYSTEMSTATUS'] = $this->getSystemStatus();
         }
+        $xhprofData = xhprof_disable();
+        $data['SYSTEMSTATUS']['XHPROF'] = $xhprofData;
         return Helper()->json_encode($data);
     }
 
@@ -400,8 +402,7 @@ class Response
             $data ['memoryp_peak'] = sprintf("%.3f",memory_get_peak_usage()/1024);#峰值内存
             $data ['memoryp_usage'] =  sprintf("%.3f",memory_get_peak_usage(true)/1024);#系统分配的内存
         }
-
-        $data ['Perform time (S)'] = round(microtime(true)-($_SERVER['REQUEST_TIME_FLOAT']),4);#执行耗时(S)
+        $data ['perform_time'] = round(microtime(true)-($_SERVER['REQUEST_TIME_FLOAT']),4);#执行耗时(S)
         return $data;
     }
 

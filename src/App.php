@@ -183,6 +183,7 @@ class App extends Container
      */
     public function __construct($document_root,bool $exploit = true,$app_path='app',$pattern = 'ORIGINAL',$appConfigPath='',$deployPath='',$renPattern='WEB',$argv=[])
     {
+        xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
         # 刚开始进入框架的内存
         $this->memory_began = memory_get_usage()/1024;
         # 运行模式
