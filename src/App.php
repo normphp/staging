@@ -475,7 +475,7 @@ class App extends Container
         require ($this->DOCUMENT_ROOT.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'normphp'.DIRECTORY_SEPARATOR.'helper'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR. 'function.php');
         # 获取配置到define
 
-        $this->__UUID_IDENTIFIER__ = \Config::__UUID_IDENTIFIER__;//空间唯一参数
+        $this->__UUID_IDENTIFIER__ = \Config::UUID_IDENTIFIER;//空间唯一参数
         $this->__INIT__ = \Config::UNIVERSAL['init'];//初始化配置
         $this->__ROUTE__ = \Config::UNIVERSAL['route'];//路由配置
         $this->__ERROR_LOG_SAVE__ = \Config::ERROR_LOG_SAVE;//路由配置
