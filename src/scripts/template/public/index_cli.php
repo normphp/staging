@@ -8,4 +8,4 @@
  */
 
 require(__DIR__.'/../vendor/autoload.php');
-(new normphp\staging\App(__DIR__,true, 'app','ORIGINAL','','','CLI',$argv))->start();
+(new normphp\staging\App(documentRoot:  __DIR__, appPath:'app', pattern: 'ORIGINAL', appConfigPath:'', deployPath:'', renPattern:'CLI', argv:$argv))->start();

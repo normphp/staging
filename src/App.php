@@ -172,8 +172,8 @@ class App extends Container
     private $__ERROR_LOG_SAVE__ = 'file';
     /**
      * App constructor.
-     * @param bool $exploit             是否开发模式
-     * @param string $app_path          app应用路径
+     * @param string $documentRoot       上下文路径
+     * @param string $appPath            app应用路径
      * @param string $pattern           运行没事SAAS|ORIGINAL
      * @param string $appConfigPath     应用配置路径
      * @param string $deployPath        部署配置路径
@@ -181,7 +181,7 @@ class App extends Container
      * @param array $argv               命令行模式下的参数
      * @throws Exception
      */
-    public function __construct($document_root,bool $exploit = true,$app_path='app',$pattern = 'ORIGINAL',$appConfigPath='',$deployPath='',$renPattern='WEB',$argv=[])
+    public function __construct(string $documentRoot, string $appPath='app', string $pattern = 'ORIGINAL', string $appConfigPath='', string $deployPath='', string $renPattern='WEB', array $argv=[])
     {
         xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
         # 刚开始进入框架的内存
@@ -191,7 +191,7 @@ class App extends Container
         # 判断操作系统
         if (DIRECTORY_SEPARATOR ==='\\'){$this->__OS__ = 'widnows';}
         #定义项目根目录
-        $this->DOCUMENT_ROOT = dirname($document_root).DIRECTORY_SEPARATOR;
+        $this->DOCUMENT_ROOT = dirname($documentRoot).DIRECTORY_SEPARATOR;
         if ($this->__PATTERN__ =='CLI'){
             # 命令行模式
             # 比如>php index_cli.php --route gdhsg  --domain oauth.heil.top
@@ -222,8 +222,7 @@ class App extends Container
         }else{
             $this->__CLI__SQL_LOG__ = $getopt['sqllog']??'false';
         }
-        $this->__APP__ =  $app_path;            #应用路径
-        $this->__EXPLOIT__ = $exploit;          #是否开发调试模式  (使用应用级别的因为在项目级别可能会地址SAAS模式下所有的租户都开启了调试模式)
+        $this->__APP__ =  $appPath;            #应用路径
         $this->__USE_PATTERN__ = $pattern;      #应用模式 ORIGINAL       SAAS
         #项目级别配置
         if (empty($deployPath)){
@@ -244,7 +243,7 @@ class App extends Container
 //        $this->Helper();
 
         $this->Helper('\\container\\'.$this->__APP__.'\HelperContainer');
-        if ($this->Helper()->is_empty($app_path)){
+        if ($this->Helper()->is_empty($appPath)){
             throw new \Exception('应用路径不能为空'.PHP_VERSION);
         }
         #获取配置、判断环境
