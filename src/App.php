@@ -262,8 +262,7 @@ class App extends Container
             //set_exception_handler(['MyException','production']);
         }
         # 设置初始化配置   服务器版本php_uname('s').php_uname('r');
-        $appConfigPath = $this->setDefine($pattern,$appConfigPath,$deployPath); #关于配置：先读取deploy配置确定当前项目配置是从配置中心获取还是使用本地配置
-
+        $appConfigPath = $this->setDefine($pattern,$appConfigPath); #关于配置：先读取deploy配置确定当前项目配置是从配置中心获取还是使用本地配置
         self::$containerInstance[static::CONTAINER_NAME] = $this;
     }
 
@@ -320,13 +319,15 @@ class App extends Container
         $this->__EXPLOIT__ = \Deploy::__EXPLOIT__;//设置模式
         terminalInfo::$ipPattern = \Deploy::CDN_AGENCY;
         $this->__CLIENT_IP__ = terminalInfo::get_ip();  # 客户端 IP
+
         # 判断获取配置方式
-        if(\Deploy::toLoadConfig == 'ConfigCenter')
+        if(\Deploy::toLoadConfig === 'ConfigCenter')
         {
             /**
              * 判断是否存在配置
              */
             $LocalBuildService = new LocalBuildService();
+
             if($this->__EXPLOIT__){
                 $data=[
                     'appid'             =>  \Deploy::INITIALIZE['appid'],//项目标识
@@ -378,7 +379,7 @@ class App extends Container
 
         }else if(\Deploy::toLoadConfig == 'Local'){
             # 本地获取
-            
+
             # 判断是否是开发调试模式
             if($this->__EXPLOIT__){
                 # 开发模式始终获取最新基础配置
@@ -436,6 +437,7 @@ class App extends Container
                     # 合并
                     $this->InitializeConfig()->set_config('PackageConfig',$PackageConfig,$path);
                 }
+
             }
         }
     }
@@ -448,7 +450,7 @@ class App extends Container
      * @return string
      * @throws \Exception
      */
-    protected function setDefine($pattern = 'ORIGINAL',$path='',$deployPath='')
+    protected function setDefine($pattern = 'ORIGINAL',$path='')
     {
         $this->__RUN_PATTERN__ = $pattern;//运行模式  SAAS    ORIGINAL
 
@@ -456,6 +458,7 @@ class App extends Container
 
         if($this->__RUN_PATTERN__ == 'ORIGINAL'){ # 传统模式
             $this->getInitDefine($this->__CONFIG_PATH__,$namespace,$this->__DEPLOY_CONFIG_PATH__);
+
         }else if($this->__RUN_PATTERN__ == 'SAAS'){
             if(empty($path)){
                 throw new \Exception('SAAS配置路径必须',10003);
@@ -463,9 +466,8 @@ class App extends Container
             # 自定义路径
             $path .= DIRECTORY_SEPARATOR.$_SERVER['HTTP_HOST'].DIRECTORY_SEPARATOR.$this->__APP__.DIRECTORY_SEPARATOR;
             $namespace = 'config\\'.$this->__APP__;
-            $this->getInitDefine($path,$namespace,$deployPath);
+            $this->getInitDefine($path,$namespace, $this->__DEPLOY_CONFIG_PATH__);
         }
-
         # 包含配置
         require ($this->__CONFIG_PATH__.'Config.php');
         require ($this->__CONFIG_PATH__.'PackageConfig.php');
@@ -483,7 +485,7 @@ class App extends Container
 
         # LocalBuildService::cliInitDeploy方法创建不在记录在git中，因此在开发模式下在进入路由前执行此方法动态生成控制器
         #  同时开发模式下可能响应时间会更长
-        if ($this->__EXPLOIT__ || !file_exists($deployPath.DIRECTORY_SEPARATOR.$this->__APP__.'BaseAuthGroup.php') || !file_exists($deployPath.DIRECTORY_SEPARATOR.$this->__APP__.'BaseMenu.php') ||\Deploy::ENVIRONMENT =='develop'){
+        if ($this->__EXPLOIT__ || !file_exists($this->__DEPLOY_CONFIG_PATH__.$this->__APP__.DIRECTORY_SEPARATOR.'BaseAuthGroup.php') || !file_exists($this->__DEPLOY_CONFIG_PATH__.$this->__APP__.DIRECTORY_SEPARATOR.'BaseMenu.php') || \Deploy::ENVIRONMENT =='develop'){
             LocalBuildService::cliInitDeploy($this,['force'=>true]);    #动态生成控制器和其他文件
             LocalBuildService::getMenuTemplate($this,['force'=>true]);  #动态根据依赖包生成菜单文件
         }
