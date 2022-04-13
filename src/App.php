@@ -40,7 +40,11 @@ class App extends Container
     /**
      * 框架主版本
      */
-    const  VERSIONS = '1.01';
+    const  VERSIONS = '1.02';
+    /**
+     * 需要php版本
+     */
+    const NEED_PHP_VERSION = '8.0';
     /**
      * 是否开启开发调试模式
      * @var bool
@@ -246,9 +250,9 @@ class App extends Container
         if ($this->Helper()->is_empty($appPath)){
             throw new \Exception('应用路径不能为空'.PHP_VERSION);
         }
-        #获取配置、判断环境
-        if(PHP_VERSION <= 7){
-            throw new \Exception('PHP版本必须<=7,当前版本'.PHP_VERSION);
+        #获取配置、判断环境 NEED_PHP_VERSION
+        if(version_compare(PHP_VERSION, static::NEED_PHP_VERSION, '>=')){
+           throw new \Exception('PHP版本必须<=8,当前版本'.PHP_VERSION);
         }
 
         # 判断是否为开发调试模式
