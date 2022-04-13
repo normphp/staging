@@ -187,6 +187,10 @@ class App extends Container
      */
     public function __construct(string $documentRoot, string $appPath='app', string $pattern = 'ORIGINAL', string $appConfigPath='', string $deployPath='', string $renPattern='WEB', array $argv=[])
     {
+        #获取配置、判断环境 NEED_PHP_VERSION
+        if(version_compare(PHP_VERSION, static::NEED_PHP_VERSION, '<')){
+            throw new \Exception('PHP版本必须<=8,当前版本'.PHP_VERSION);
+        }
         xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
         # 刚开始进入框架的内存
         $this->memory_began = memory_get_usage()/1024;
@@ -242,7 +246,6 @@ class App extends Container
 
         # 应用配置路径
         $this->__CONFIG_PATH__ = empty($appConfigPath)?$this->DOCUMENT_ROOT.'config'.$pathFof.DIRECTORY_SEPARATOR.$this->__APP__.DIRECTORY_SEPARATOR:$appConfigPath;
-
         # 启动Helper容器
 //        $this->Helper();
 
@@ -250,11 +253,6 @@ class App extends Container
         if ($this->Helper()->is_empty($appPath)){
             throw new \Exception('应用路径不能为空'.PHP_VERSION);
         }
-        #获取配置、判断环境 NEED_PHP_VERSION
-        if(version_compare(PHP_VERSION, static::NEED_PHP_VERSION, '>=')){
-           throw new \Exception('PHP版本必须<=8,当前版本'.PHP_VERSION);
-        }
-
         # 判断是否为开发调试模式
         if($this->__EXPLOIT__){
             $this->MyException($this,$appConfigPath,null,[]);
@@ -266,7 +264,7 @@ class App extends Container
             //set_exception_handler(['MyException','production']);
         }
         # 设置初始化配置   服务器版本php_uname('s').php_uname('r');
-        $appConfigPath = $this->setDefine($pattern,$appConfigPath); #关于配置：先读取deploy配置确定当前项目配置是从配置中心获取还是使用本地配置
+        $appConfigPath = $this->setDefine(); #关于配置：先读取deploy配置确定当前项目配置是从配置中心获取还是使用本地配置
         self::$containerInstance[static::CONTAINER_NAME] = $this;
     }
 
@@ -325,8 +323,7 @@ class App extends Container
         $this->__CLIENT_IP__ = terminalInfo::get_ip();  # 客户端 IP
 
         # 判断获取配置方式
-        if(\Deploy::toLoadConfig === 'ConfigCenter')
-        {
+        if(\Deploy::toLoadConfig === 'ConfigCenter') {
             /**
              * 判断是否存在配置
              */
@@ -351,30 +348,29 @@ class App extends Container
                 $this->InitializeConfig()->set_config('Config',$Config['config'],$path,'','基础配置文件',$Config['date'],$Config['time'],$Config['appid']);
                 $this->InitializeConfig()->set_config('Dbtabase',$dbtabase['config'],$path,'','数据库配置文件',$dbtabase['date'],$dbtabase['time'],$dbtabase['appid']);
                 $this->InitializeConfig()->set_config('ErrorOrLog',$get_error_log['config'],$path,'','错误日志配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
-            }else{
-
+            } else {
                 $data=[
                     'appid'             =>\Deploy::INITIALIZE['appid'],//项目标识
                     'domain'            =>$_SERVER['HTTP_HOST'],//当前域名
                     'MODULE_PREFIX'     =>\Deploy::PROJECT_ID,//项目标识
                     'time'              =>time(),//
                 ];
-                if(!file_exists($path.'Config.php')){
+                if(!file_exists($path.'Config.php')) {
                     $data['ProcurementType'] = 'Config';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
                     $Config = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('Config',$Config['config'],$path,'','基础配置文件',$Config['date'],$Config['time'],$Config['appid']);
                 }
-                if(!file_exists($path.'Dbtabase.php')){
+                if(!file_exists($path.'Dbtabase.php')) {
                     $data['ProcurementType'] = 'Dbtabase';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
                     $dbtabase = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('Dbtabase',$dbtabase['config'],$path,'','数据库配置文件',$dbtabase['date'],$dbtabase['time'],$dbtabase['appid']);
                 }
-                if(!file_exists($path.'ErrorOrLog.php')){
+                if(!file_exists($path.'ErrorOrLog.php')) {
                     $data['ProcurementType'] = 'ErrorOrLogConfig';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
                     $get_error_log = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('ErrorOrLog',$get_error_log['config'],$path,'','错误日志配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
                 }
-                if(!file_exists($path.'PackageConfig.php')){
+                if(!file_exists($path.'PackageConfig.php')) {
                     $data['ProcurementType'] = 'PackageConfig';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
                     $get_error_log = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('PackageConfig',$get_error_log['config'],$path,'','包配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
@@ -383,7 +379,6 @@ class App extends Container
 
         }else if(\Deploy::toLoadConfig == 'Local'){
             # 本地获取
-
             # 判断是否是开发调试模式
             if($this->__EXPLOIT__){
                 # 开发模式始终获取最新基础配置
@@ -448,29 +443,25 @@ class App extends Container
 
     /**
      * 设置define
-     * @param string $pattern 默认 传统模式  namespace
      * @param string $path 默认 ../config/__APP__/    传统模式
      * @param string $deployPath 部署配置路径
      * @return string
      * @throws \Exception
      */
-    protected function setDefine($pattern = 'ORIGINAL',$path='')
+    protected function setDefine()
     {
-        $this->__RUN_PATTERN__ = $pattern;//运行模式  SAAS    ORIGINAL
-
         $namespace = 'config\\'.$this->__APP__; # 命名空间
 
         if($this->__RUN_PATTERN__ == 'ORIGINAL'){ # 传统模式
             $this->getInitDefine($this->__CONFIG_PATH__,$namespace,$this->__DEPLOY_CONFIG_PATH__);
-
         }else if($this->__RUN_PATTERN__ == 'SAAS'){
-            if(empty($path)){
+            if(empty($this->__CONFIG_PATH__)){
                 throw new \Exception('SAAS配置路径必须',10003);
             }
             # 自定义路径
-            $path .= DIRECTORY_SEPARATOR.$_SERVER['HTTP_HOST'].DIRECTORY_SEPARATOR.$this->__APP__.DIRECTORY_SEPARATOR;
+            $this->__CONFIG_PATH__ .= DIRECTORY_SEPARATOR.$_SERVER['HTTP_HOST'].DIRECTORY_SEPARATOR.$this->__APP__.DIRECTORY_SEPARATOR;
             $namespace = 'config\\'.$this->__APP__;
-            $this->getInitDefine($path,$namespace, $this->__DEPLOY_CONFIG_PATH__);
+            $this->getInitDefine($this->__CONFIG_PATH__,$namespace, $this->__DEPLOY_CONFIG_PATH__);
         }
         # 包含配置
         require ($this->__CONFIG_PATH__.'Config.php');
@@ -497,8 +488,6 @@ class App extends Container
         require ($this->__CONFIG_PATH__.'BaseAuthGroup.php');
         require ($this->__CONFIG_PATH__.'BaseConstraint.php');
         require ($this->__CONFIG_PATH__.'BaseMenu.php');
-
-        return $path;
     }
 
 
