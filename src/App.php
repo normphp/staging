@@ -382,9 +382,9 @@ class App extends Container
             # 判断是否是开发调试模式
             if($this->__EXPLOIT__){
                 # 开发模式始终获取最新基础配置
-                $Config = $this->InitializeConfig()->get_config_const($path);
-                $dbtabase = $this->InitializeConfig()->get_dbtabase_const($path);
-                $get_error_log = $this->InitializeConfig()->get_error_log_const($path);
+                $Config = $this->InitializeConfig()->get_config_const();
+                $dbtabase = $this->InitializeConfig()->get_dbtabase_const();
+                $get_error_log = $this->InitializeConfig()->get_error_log_const();
                 # 判断是否存在配置
                 if(!file_exists($path.'SetConfig.php')){
                     $this->InitializeConfig()->set_config('SetConfig',$Config,$path,$namespace);
