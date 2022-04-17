@@ -322,7 +322,9 @@ class Route
             # 匹配到常规路由
         }else{
             # 使用路径路由匹配模式
-            if(empty($RouteData)){ throw new \Exception('路由不存在'); }
+            if(empty($RouteData)){
+                throw new \Exception('路由不存在');
+            }
             # 不在常规路由中 同时也没有模糊匹配（path中确定的部分简单匹配）
             # 使用快捷匹配路由匹配
             $length = 0;
