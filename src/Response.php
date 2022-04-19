@@ -257,7 +257,7 @@ class Response
             # 判断是否是array
             if (is_array($data)){
                 # 是array
-                if(isset($data[$this->app->__INIT__['returnJsonData']]) && isset($data[$this->app->__INIT__['successReturnJsonCode']['name']]) && isset($this->app->__INIT__['SuccessReturnJsonMsg']['name']))
+                if(isset($data[$this->app->__INIT__['returnJsonData']]) && isset($data[$this->app->__INIT__['successReturnJsonCode']['name']]) && isset($this->app->__INIT__['successReturnJsonMsg']['name']))
                 {
 
                     # 正常使用方法返回的格式化数据  在过滤后 强制把数据写入returnJsonData中

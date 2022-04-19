@@ -315,7 +315,7 @@ class Request
     {
         /** 循环处理限制 **/
         foreach ($info['restrain'] as $restrainVlue){
-            if (in_array($restrainVlue,$this->app->Route()::ReturnFormat) && $restrainVlue !=='raw'){
+            if (in_array($restrainVlue,$this->app->Route()::RETURN_FORMAT) && $restrainVlue !=='raw'){
                 /**结点 层**/
                 $this->dataFiltrationRecursive($data[$field],$info['substratum'],$restrainVlue);
             }else{
@@ -334,7 +334,7 @@ class Request
         /***部分自定义类型带有参数，带参数的为array数据类型**/
         $restrainKey = is_array($dataType)?$dataType[0]:$dataType;
         /**常规数据类型 'int','string','bool','float','array','null']**/
-        if (in_array($restrainKey,$this->app->Route()::RequestParamDataType)){
+        if (in_array($restrainKey,$this->app->Route()::REQUEST_PATH_PARAM_DATA_TYPE)){
             if (is_array($data)){$data = json_encode($data);}
             settype($data,$restrainKey);
         }else if(isset(\BaseConstraint::DATA[$restrainKey])){

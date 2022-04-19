@@ -40,9 +40,8 @@ class Route
     const REQUEST_PARAM_DATA_TYPE = ['int','string','bool','float','array','null'];
     /**
      * 返回数据类型
-     * RETUEN_FORMAT
      */
-    const RETUEN_FORMAT = ['list','objectList','object','raw'];
+    const RETURN_FORMAT = ['list','objectList','object','raw'];
     /**
      * 路由附加配置
      * debug 调试模式    auth  权限
@@ -439,37 +438,34 @@ class Route
                 # 转换名
                 $name = ucfirst(strtolower($value));
                 /**
-                 * RouteInfoGetPath
-                 * RouteInfoGetRule
+                 * 生成路由配置
                  */
-//                if (isset($this->noteRouter[$value])){
-//                    # 写入
-//
-//                    if (!isset($this->noteRouter[$value]['Path'])){
-//                        $this->noteRouter[$value]['Path']=[];
-//                    }
-//                    if (!isset($this->noteRouter[$value]['Rule'])){
-//                        $this->noteRouter[$value]['Rule']=[];
-//                    }
-//                    $this->app->InitializeConfig()->set_arrayConfig('RouteInfo'.$name.'Path',$this->noteRouter[$value]['Path']??[],$this->app->__DEPLOY_CONFIG_PATH__.'route'.DIRECTORY_SEPARATOR);
-//                    $this->app->InitializeConfig()->set_arrayConfig('RouteInfo'.$name.'Rule',$this->noteRouter[$value]['Rule']??[],$this->app->__DEPLOY_CONFIG_PATH__.'route'.DIRECTORY_SEPARATOR);
-//
-//                }else{
-//                    $this->app->InitializeConfig()->set_config('RouteInfo'.$name,['Rule'=>[],'Path'=>[]],$this->app->__DEPLOY_CONFIG_PATH__.'route'.DIRECTORY_SEPARATOR);
-//                }
                 $this->app->InitializeConfig()->set_arrayConfig('RouteInfo'.$name.'Path',$this->noteRouter[$value]['Path']??[],$this->app->__DEPLOY_CONFIG_PATH__.'route'.DIRECTORY_SEPARATOR);
                 $this->app->InitializeConfig()->set_arrayConfig('RouteInfo'.$name.'Rule',$this->noteRouter[$value]['Rule']??[],$this->app->__DEPLOY_CONFIG_PATH__.'route'.DIRECTORY_SEPARATOR);
-
             }
-            $this->app->InitializeConfig()->set_config('RouteInfo',$this->noteRouter,$this->app->__DEPLOY_CONFIG_PATH__);
+            #$this->app->InitializeConfig()->set_arrayConfig('RouteInfo',$this->noteRouter,$this->app->__DEPLOY_CONFIG_PATH__);
+            $this->app->InitializeConfig()->set_arrayConfig('RouteNoteBlock', $this->noteBlock, $this->app->__DEPLOY_CONFIG_PATH__);
             # 合并权限数据
             $this->setPermissions();
-            $this->app->InitializeConfig()->set_config('PermissionsInfo',$this->Permissions,$this->app->__DEPLOY_CONFIG_PATH__);
+            $this->app->InitializeConfig()->set_config('PermissionsInfo', $this->Permissions, $this->app->__DEPLOY_CONFIG_PATH__);
         }
         # 包含配置
         #require ($this->app->__DEPLOY_CONFIG_PATH__.'RouteInfo.php');
         require ($this->app->__DEPLOY_CONFIG_PATH__.'PermissionsInfo.php');
     }
+
+    /**
+     * 获取
+     * @return void
+     */
+    public function getNoteBlockDocument()
+    {
+        if (\Deploy::__DOCUMENT__ && $this->noteBlock = 2) {
+            $this->noteBlock = require ($this->app->__DEPLOY_CONFIG_PATH__.'RouteNoteBlock.php');
+        }
+        return $this->noteBlock;
+    }
+
     /**
      * @Author 皮泽培
      * @Created 2019/11/19 11:17
@@ -663,7 +659,7 @@ class Route
                 preg_match('/@resourceType[\s]+(.*?)[\r\n]/s',$v,$resourceType);# 路由注意类型 如果默认是API资源  microservice为微服务应用API资源
                 if (isset($resourceType[1]) && !in_array($resourceType[1],self::RESOURCE_TYPE)){ throw new \Exception('resourceType 类型错误['.$baseErrorNamespace.']');}
 
-                preg_match('/@explain[\s]+(.*?)[*][\s]+@/s',$v,$routeExplain);//路由解释说明（备注）
+                preg_match('/@explain[\s]+(.*?)[\r\n]+@/s',$v,$routeExplain);//路由解释说明（备注）多行/@explain[\s]+(.*?)[*][\s]@/s
                 preg_match('/@title[\s]+(.*?)@/s',$v,$routeTitle);//获取路由名称
                 preg_match('/@param[\s]+(.*?)@/s',$v,$routeParam);//请求参数
                 preg_match('/@return[\s]+(.*?)@/s',$v,$routeReturn);//获取返回参数
@@ -765,7 +761,7 @@ class Route
                 /** 准备路由数据   */
                 $noteRouter = [
                     #'ParamObject'=>$routeParamObject??'',//请求对象
-                    #'routeParamObjectPath'=>$routeParamObjectPath[1]??'',//请求对象命名空间路径
+                    #'paramObjectPath'=>$routeParamObjectPath[1]??'',//请求对象命名空间路径
                     'resourceType' => $resourceType[1] ?? 'api',
                     'tag' => $tag,//tag路由标识
                     'Namespace' => $classNamespace,//路由请求的控制器
@@ -780,7 +776,7 @@ class Route
                 # 优化内存使用效率
 
                 #请求类型json  array xml
-                if (isset($routeParamObjectType[1])){$noteRouter['routeParamObjectType'] = $routeParamObjectType[1];}
+                if (isset($routeParamObjectType[1])){$noteRouter['paramObjectType'] = $routeParamObjectType[1];}
                 #权限扩展信息
                 if (!empty($routeAuthExtend)){$noteRouter['routeAuthExtend'] = $routeAuthExtend;}
                 #路由附加参数
@@ -807,7 +803,7 @@ class Route
                     'routerType' => $routerType,//路由类型
                     'matchStr' => $matchStr ?? '',//请求参数
                     'routerStr' => $routerStr,//路由
-                    'routeReturnExplain' => $routeReturnExplain ?? [],//返回说明
+                    'returnExplain' => $routeReturnExplain ?? [],//返回说明
                     'Author' => $Author[1] ?? '',//方法创建人
                     'Created' => $Created[1] ?? '',//方法创建时间
                     'param' => $routeParam[1] ?? '',//请求参数
@@ -817,8 +813,8 @@ class Route
                     'title' => $routeTitle[1] ?? '',//获取路由名称
                     'RouterAdded' => $routerAdded ?? [],//路由附加参数
                     'ParamObject' => $routeParamObject ?? '',//请求对象
-                    'routeParamObjectPath' => $routeParamObjectPath[1] ?? '',//请求对象命名空间路径
-                    'routeParamObjectType' => $routeParamObjectType[1] ?? '',//请求类型json  array xml
+                    'paramObjectPath' => $routeParamObjectPath[1] ?? '',//请求对象命名空间路径
+                    'paramObjectType' => $routeParamObjectType[1] ?? '',//请求类型json  array xml
                     'PathParam' => $PathParam ?? [],//路径参数（路由参数如user/:id  id就是路由参数）
                     'Param' => $routeParamData ?? '',//路由参数（url上的或者post等）
                     'Return' => $routeReturnData ?? [],//返回参数
@@ -1048,7 +1044,7 @@ class Route
                 $restrain = array_filter(explode(' ',$fieldRestrain[1]),function ($var){if ($var!==''){return $var;}});
                 /**过滤非法的数据数约束类型 **/
                 foreach ($restrain as &$restrainv){
-                    if (!in_array($restrainv,self::RETUEN_FORMAT) && !isset(\BaseConstraint::DATA[$restrainv]) && !in_array($restrainv,self::REQUEST_PARAM_DATA_TYPE)){
+                    if (!in_array($restrainv,self::RETURN_FORMAT) && !isset(\BaseConstraint::DATA[$restrainv]) && !in_array($restrainv,self::REQUEST_PARAM_DATA_TYPE)){
                         # 非直接定义好的参数，使用：进行切割获取参数名称
                         $restrainvArray= explode(':',$restrainv);
                         if (count($restrainvArray)<=1){
