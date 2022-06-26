@@ -198,8 +198,10 @@ class Route
         }
         # postfix 自定义路由后缀在前后端完全分离时有用：nginx 配置中固定的后缀转发到后端
         if ($this->app->__ROUTE__['postfix'] !==[]){
-            # 配培到对应的默认 后缀 替换成空格 避免开发过程中重新不必要的混乱，方便后期部署时随时随地替换后缀
-            foreach ($this->app->__ROUTE__['postfix'] as $value){$atRoute = str_replace($value,'',$atRoute);}
+            # 配配到对应的默认 后缀 替换成空格 避免开发过程中出现不必要的混乱，方便后期部署时随时随地替换后缀
+            foreach ($this->app->__ROUTE__['postfix'] as $value){
+                $atRoute = str_replace($value,'',$atRoute);
+            }
         }
         # 定义当前路由
         $this->atRoute = $atRoute;
@@ -450,7 +452,6 @@ class Route
             $this->app->InitializeConfig()->set_config('PermissionsInfo', $this->Permissions, $this->app->__DEPLOY_CONFIG_PATH__);
         }
         # 包含配置
-        #require ($this->app->__DEPLOY_CONFIG_PATH__.'RouteInfo.php');
         require ($this->app->__DEPLOY_CONFIG_PATH__.'PermissionsInfo.php');
     }
 
@@ -500,7 +501,10 @@ class Route
      */
     protected function noteBlock()
     {
-        foreach ($this->filePathData as $k=>$v){$this->getNoteBlock($v);unset($this->filePathData[$k]);}
+        foreach ($this->filePathData as $k=>$v){
+            $this->getNoteBlock($v);
+            unset($this->filePathData[$k]);
+        }
     }
 
     /**
@@ -649,9 +653,13 @@ class Route
             }
             # 检查路由冲突 noteRouter
             if($routerType == 'Rule'){
-                if(isset($this->noteRouter[$routerData[0]][$routerType][$routerStr] )){throw new \Exception("路由冲突:[".$baseErrorNamespace.']<=>['.$this->noteRouter[$routerData[0]][$routerType][$routerStr]['Namespace'].'-'.$routerType.'-'.$routerStr.']');}
+                if(isset($this->noteRouter[$routerData[0]][$routerType][$routerStr] )){
+                    throw new \Exception("路由冲突:[".$baseErrorNamespace.']<=>['.$this->noteRouter[$routerData[0]][$routerType][$routerStr]['Namespace'].'-'.$routerType.'-'.$routerStr.']');
+                }
             }else{
-                if(isset($this->noteRouter[$routerData[0]][$routerType][$matchStr] )){throw new \Exception("路由冲突:[".$baseErrorNamespace.']<=>['.$this->noteRouter[$routerData[0]][$routerType][$matchStr]['Namespace'].'-'.$routerType.'-'.$this->noteRouter[$routerData[0]][$routerType][$matchStr]['Router'].']');}
+                if(isset($this->noteRouter[$routerData[0]][$routerType][$matchStr] )){
+                    throw new \Exception("路由冲突:[".$baseErrorNamespace.']<=>['.$this->noteRouter[$routerData[0]][$routerType][$matchStr]['Namespace'].'-'.$routerType.'-'.$this->noteRouter[$routerData[0]][$routerType][$matchStr]['Router'].']');
+                }
             }
             # 检测路由详细信息 1 请求方法 2 路由路径 3 路由参数
             if(count($routerData)>=2){

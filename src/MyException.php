@@ -296,7 +296,7 @@ class MyException
                 'controller'=>($this->app->Route($this->app)->controller??'').'->'.($this->app->Route()->method??''),
                 'router'=>$this->app->Route()->atRoute,
             ],
-            'sql'=>isset($GLOBALS['DBTABASE']['sqlLog'])?$GLOBALS['DBTABASE']['sqlLog']:'',
+            'sql'=>isset($GLOBALS['DATABASE']['sqlLog'])?$GLOBALS['DATABASE']['sqlLog']:'',
             'File'=>str_replace(getcwd(), "", $this->exception->getFile()).'['.$this->exception->getLine().']',
             'Trace'=>$this->getTrace(20),
         ];

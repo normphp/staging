@@ -281,7 +281,7 @@ class Response
             $data['SYSTEMSTATUS'] = $this->getSystemStatus();
         }
         $xhprofData = xhprof_disable();
-        $data['SYSTEMSTATUS']['XHPROF'] = $xhprofData;
+//        $data['SYSTEMSTATUS']['XHPROF'] = $xhprofData;
         return Helper()->json_encode($data);
     }
 
@@ -380,7 +380,9 @@ class Response
             $data['route'] = $this->app->Route()->atRoute;#解释路由
         }
         if (in_array('sql',$this->app->__INIT__['SYSTEMSTATUS'])){
-            if (class_exists('Db')){$data['sql'] = isset(Db::$DBTABASE['sqlLog'])?Db::$DBTABASE['sqlLog']:'';} #历史slq
+            if (class_exists('\normphp\model\db\Db')){
+                $data['sql'] = isset(Db::$DATABASE['sqlLog'])?Db::$DATABASE['sqlLog']:'';
+            } #历史slq
         }
         if (in_array('clientInfo',$this->app->__INIT__['SYSTEMSTATUS'])){ # clientInfo 客户端信息
             if ($this->app->__INIT__['clientInfo'] && $this->app->__PATTERN__ !== 'CLI'){

@@ -336,17 +336,17 @@ class App extends Container
                     'MODULE_PREFIX'     =>  \Deploy::PROJECT_ID,//项目标识
                     'time'              =>  time(),//
                 ];
-                $data['ProcurementType'] = 'Config';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
+                $data['ProcurementType'] = 'Config';//获取类型 
                 $Config = $LocalBuildService->getConfigCenter($data);
-                $data['ProcurementType'] = 'Dbtabase';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
-                $dbtabase = $LocalBuildService->getConfigCenter($data);
-                $data['ProcurementType'] = 'ErrorOrLogConfig';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
+                $data['ProcurementType'] = 'Database';//获取类型  
+                $database = $LocalBuildService->getConfigCenter($data);
+                $data['ProcurementType'] = 'ErrorOrLogConfig';//获取类型
                 $get_error_log = $LocalBuildService->getConfigCenter($data);
                 /**
                  * 写入
                  */
                 $this->InitializeConfig()->set_config('Config',$Config['config'],$path,'','基础配置文件',$Config['date'],$Config['time'],$Config['appid']);
-                $this->InitializeConfig()->set_config('Dbtabase',$dbtabase['config'],$path,'','数据库配置文件',$dbtabase['date'],$dbtabase['time'],$dbtabase['appid']);
+                $this->InitializeConfig()->set_config('Database',$database['config'],$path,'','数据库配置文件',$database['date'],$database['time'],$database['appid']);
                 $this->InitializeConfig()->set_config('ErrorOrLog',$get_error_log['config'],$path,'','错误日志配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
             } else {
                 $data=[
@@ -356,22 +356,22 @@ class App extends Container
                     'time'              =>time(),//
                 ];
                 if(!file_exists($path.'Config.php')) {
-                    $data['ProcurementType'] = 'Config';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
+                    $data['ProcurementType'] = 'Config';//获取类型   Config.php  Database.php  ErrorOrLogConfig.php
                     $Config = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('Config',$Config['config'],$path,'','基础配置文件',$Config['date'],$Config['time'],$Config['appid']);
                 }
-                if(!file_exists($path.'Dbtabase.php')) {
-                    $data['ProcurementType'] = 'Dbtabase';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
-                    $dbtabase = $LocalBuildService->getConfigCenter($data);
-                    $this->InitializeConfig()->set_config('Dbtabase',$dbtabase['config'],$path,'','数据库配置文件',$dbtabase['date'],$dbtabase['time'],$dbtabase['appid']);
+                if(!file_exists($path.'Database.php')) {
+                    $data['ProcurementType'] = 'Database';//获取类型   Config.php  Database.php  ErrorOrLogConfig.php
+                    $database = $LocalBuildService->getConfigCenter($data);
+                    $this->InitializeConfig()->set_config('Database',$database['config'],$path,'','数据库配置文件',$database['date'],$database['time'],$database['appid']);
                 }
                 if(!file_exists($path.'ErrorOrLog.php')) {
-                    $data['ProcurementType'] = 'ErrorOrLogConfig';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
+                    $data['ProcurementType'] = 'ErrorOrLogConfig';//获取类型   Config.php  Database.php  ErrorOrLogConfig.php
                     $get_error_log = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('ErrorOrLog',$get_error_log['config'],$path,'','错误日志配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
                 }
                 if(!file_exists($path.'PackageConfig.php')) {
-                    $data['ProcurementType'] = 'PackageConfig';//获取类型   Config.php  Dbtabase.php  ErrorOrLogConfig.php
+                    $data['ProcurementType'] = 'PackageConfig';//获取类型   Config.php  Database.php  ErrorOrLogConfig.php
                     $get_error_log = $LocalBuildService->getConfigCenter($data);
                     $this->InitializeConfig()->set_config('PackageConfig',$get_error_log['config'],$path,'','包配置文件',$get_error_log['date'],$get_error_log['time'],$get_error_log['appid']);
                 }
@@ -383,14 +383,14 @@ class App extends Container
             if($this->__EXPLOIT__){
                 # 开发模式始终获取最新基础配置
                 $Config = $this->InitializeConfig()->get_config_const();
-                $dbtabase = $this->InitializeConfig()->get_dbtabase_const();
+                $database = $this->InitializeConfig()->get_database_const();
                 $get_error_log = $this->InitializeConfig()->get_error_log_const();
                 # 判断是否存在配置
                 if(!file_exists($path.'SetConfig.php')){
                     $this->InitializeConfig()->set_config('SetConfig',$Config,$path,$namespace);
                 }
-                if(!file_exists($path.'SetDbtabase.php')){
-                    $this->InitializeConfig()->set_config('SetDbtabase',$dbtabase,$path,$namespace);
+                if(!file_exists($path.'SetDatabase.php')){
+                    $this->InitializeConfig()->set_config('SetDatabase',$database,$path,$namespace);
                 }
                 if(!file_exists($path.'SetErrorOrLog.php')){
                     $this->InitializeConfig()->set_config('SetErrorOrLog',$get_error_log,$path,$namespace);
@@ -401,12 +401,12 @@ class App extends Container
                 
                 # 合并(只能合并一层)
                 $Config = array_merge($Config,$this->InitializeConfig()->get_const($namespace.'\\SetConfig'));
-                $dbtabase = array_merge($dbtabase,$this->InitializeConfig()->get_const($namespace.'\\SetDbtabase'));
+                $database = array_merge($database,$this->InitializeConfig()->get_const($namespace.'\\SetDatabase'));
                 $get_error_log = array_merge($get_error_log,$this->InitializeConfig()->get_const($namespace.'\\SetErrorOrLog'));
                 $PackageConfig = $this->InitializeConfig()->get_const($namespace.'\\SetPackageConfig');
                 # 写入
                 $this->InitializeConfig()->set_config('Config',$Config,$path);
-                $this->InitializeConfig()->set_config('Dbtabase',$dbtabase,$path);
+                $this->InitializeConfig()->set_config('Database',$database,$path);
                 $this->InitializeConfig()->set_config('ErrorOrLog',$get_error_log,$path);
                 $this->InitializeConfig()->set_config('PackageConfig',$PackageConfig,$path);
 
@@ -418,18 +418,18 @@ class App extends Container
                     $Config = array_merge($Config,$this->InitializeConfig()->get_const($namespace.'\\SetConfig'));
                     $this->InitializeConfig()->set_config('Config',$Config,$path);
                 }
-                if(!file_exists($path.'Dbtabase.php')){
+                if(!file_exists($path.'Database.php')){
 
-                    $dbtabase = $this->InitializeConfig()->get_dbtabase_const();
-                    $dbtabase = array_merge($dbtabase,$this->InitializeConfig()->get_const($namespace.'\\SetDbtabase'));
+                    $database = $this->InitializeConfig()->get_database_const();
+                    $database = array_merge($database,$this->InitializeConfig()->get_const($namespace.'\\SetDatabase'));
                     # 合并
-                    $this->InitializeConfig()->set_config('Dbtabase',$dbtabase,$path);
+                    $this->InitializeConfig()->set_config('Database',$database,$path);
                 }
                 if(!file_exists($path.'ErrorOrLog.php')){
                     $ErrorOrLog = $this->InitializeConfig()->get_error_log_const();
                     $ErrorOrLog = array_merge($ErrorOrLog,$this->InitializeConfig()->get_const($namespace.'\\SetErrorOrLog'));
                     # 合并
-                    $this->InitializeConfig()->set_config('ErrorOrLog',$dbtabase,$path);
+                    $this->InitializeConfig()->set_config('ErrorOrLog',$ErrorOrLog,$path);
                 }
                 if(!file_exists($path.'PackageConfig.php')){
                     $PackageConfig = array_merge($PackageConfig,$this->InitializeConfig()->get_const($namespace.'\\SetPackageConfig'));
@@ -466,7 +466,7 @@ class App extends Container
         # 包含配置
         require ($this->__CONFIG_PATH__.'Config.php');
         require ($this->__CONFIG_PATH__.'PackageConfig.php');
-        require($this->__CONFIG_PATH__.'Dbtabase.php');
+        require($this->__CONFIG_PATH__.'Database.php');
         require($this->__CONFIG_PATH__.'ErrorOrLog.php');
         require ($this->DOCUMENT_ROOT.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'normphp'.DIRECTORY_SEPARATOR.'helper'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR. 'function.php');
         # 获取配置到define
